@@ -28,5 +28,9 @@ export const insertBookSchema = createInsertSchema(books)
 export const selectBookSchema = createSelectSchema(books)
     .openapi("SelectBook");
 export const BookIdParamSchema = z.object({
-    id: z.string().openapi({ example: '1' }) // パスパラメータは基本 string で来るため
+    id: z
+        .string()
+        .regex(/^\d+$/, "ID must be a number")
+        .transform(Number)
+        .openapi({ example: "1" })
 });

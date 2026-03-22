@@ -31,7 +31,6 @@ export const putBookRoute = createRoute({
     },
     responses: {
         200: {content: {'application/json': {schema: z.any()}}, description: 'Book updated'},
-        400: {content: {'application/json': {schema: z.any()}}, description: 'Invalid ID'},
     },
 });
 
