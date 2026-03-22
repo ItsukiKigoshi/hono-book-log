@@ -1,5 +1,11 @@
 # やったことメモ
-## Installation
+
+## API
+### Installation
+
+```bash
+$ cd apps/api
+```
 
 ```bash
 $ bun create hono@latest hono-book-log
@@ -87,9 +93,9 @@ $ bunx wrangler d1 migrations apply hono-books-db --local
 }
 ```
 
-## まずは取得
+### まずはGet Method
 
-```ts : src/index.ts
+```ts : packages/api/src/index.ts
 import {Hono} from "hono";
 import {drizzle} from "drizzle-orm/d1";
 import {todos} from "./schema";
@@ -120,7 +126,7 @@ app.get("/books", async (c) => {
 $ bunx wrangler dev
 ```
 
-## Add Zod and OpenAPI for Debug
+### Add Zod and OpenAPI for Debug
 
 https://orm.drizzle.team/docs/zod
 
@@ -132,7 +138,7 @@ You can still use drizzle-zod package but all new update will be added to Drizzl
 ```bash
 $ bun add -D @hono/zod-openapi @hono/swagger-ui drizzle-zod
 ```
-```ts : src/schema.ts
+```ts : packages/api/src/schema.ts
 import {sqliteTable, integer, text} from "drizzle-orm/sqlite-core";
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
 // Add imports
@@ -172,9 +178,9 @@ export const BookIdParamSchema = z.object({
 });
 ```
 
-Add src/index.routes.ts
+Add packages/api/src/index.routes.ts
 
-```ts : src/index.routes.ts
+```ts : packages/api/src/index.routes.ts
 import { createRoute } from "@hono/zod-openapi";
 import {BookIdParamSchema, insertBookSchema, selectBookSchema} from "./schema";
 import { z } from "@hono/zod-openapi";
@@ -223,9 +229,9 @@ export const deleteBookRoute = createRoute({
 });
 ```
 
-Update src/index.ts
+Update packages/api/src/index.ts
 
-```ts : src/index.ts
+```ts : packages/api/src/index.ts
 import { OpenAPIHono } from "@hono/zod-openapi";
 import { swaggerUI } from "@hono/swagger-ui";
 import { drizzle } from "drizzle-orm/d1";
@@ -288,4 +294,31 @@ app.doc("/doc", {
 app.get("/ui", swaggerUI({ url: "/doc" }));
 
 export default app;
+```
+
+# App
+## Refactor
+```text
+hono-book-log/
+├── apps/
+│   ├── api/  (Hono)
+│   │   ├── src/
+│   │   └── packages.json
+│   └── app/  (Vite + React)
+│   │   ├── src/
+│       └── packages.json
+└── package.json
+```
+
+```bash
+$ bun create vite apps/app --template react-ts
+```
+
+## 技術選定覚え書き
+- hono: Supabeseよりも拡張性が高くFastAPIと違いTSが使える. Nestほど学習コストが高くなくExpressよりモダンなので洗練されてそう
+- drizzle-orm: Cloudflareを使うが，他のDBでも使えるようにORMを挟む
+- zod: HonoでOpenAPI Documentationを生成させるときにうまくやってくれそうだから（本当に？）
+
+```bash
+$ bun create vite apps/app --template react-ts
 ```
