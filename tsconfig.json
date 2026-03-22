@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "types": [
-      "@cloudflare/workers-types" // これを追加
+      "@cloudflare/workers-types"
     ],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
