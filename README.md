@@ -51,7 +51,7 @@ https://qiita.com/kaiparu/items/88ae7c11fb45b82b447a
 ```bash
 $ bun add drizzle-orm
 $ bun add -D drizzle-kit @cloudflare/workers-types wrangler
-bunx wrangler login
+$ bunx wrangler login
 ```
 
 ```ts : drizzle.config.ts
