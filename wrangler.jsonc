@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hono-book-log",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-03-21",
+  "d1_databases": [
+    {
+      "binding": "hono_books_db",
+      "database_name": "hono-books-db",
+      "database_id": "f19352de-c69e-4844-bb72-28a96086a895",
+      "migrations_dir": "./migrations"
+    }
+  ]
+}
