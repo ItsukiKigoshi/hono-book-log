@@ -11,7 +11,7 @@ type Bindings = {
 
 const app = new OpenAPIHono<{ Bindings: Bindings }>();
 
-app.get("/", (c) => c.text("Hello Hono!"));
+app.get("/", (c) => c.text("Hello This is Itsuki's Bookshelf!"));
 
 app.openapi(getBooksRoute, async (c) => {
   const db = drizzle(c.env.hono_books_db);
