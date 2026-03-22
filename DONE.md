@@ -92,10 +92,8 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>();
 
-app.get("/", (c) => c.text("Hello Hono!"));
-/**
- * books
- */
+app.get("/", (c) => c.text("Hello This is Itsuki's Bookshelf!"));
+
 app.get("/books", async (c) => {
     const db = drizzle(c.env.hono_todo_db);
     const result = await db.select().from(todos).all();
@@ -104,9 +102,16 @@ app.get("/books", async (c) => {
     }
     return c.json(result);
 });
+
+
+
 ```
 
 ```bash
 $ bunx wrangler dev
+```
 
+## Add Zod and OpenAPI for Development
+```bash
+$ bun　add -D　@drizzle-orm/zod @hono/zod-openapi @hono/swagger-ui
 ```
