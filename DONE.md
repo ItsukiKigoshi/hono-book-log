@@ -334,12 +334,22 @@ $ bun create vite apps/app --template react-ts
 
 # Deploy on Cloudflare
 
+## D1
+
+```bash
+$ bunx wrangler d1 execute hono-books-db --remote --file=./apps/api/migrations/0000_violet_starfox.sql
+```
+
+## Pages
+
 ```bash
 $ cd apps/api
 $ bunx wrangler deploy
 ```
 
-## API URL の書き換え
+## Workers
+
+### API URL の書き換え
 
 ```ts : apps/app/src/lib/api.ts
 // apps/app/src/lib/api.ts
@@ -354,8 +364,10 @@ const API_URL = import.meta.env.PROD
 export const client = hc<AppType>(API_URL);
 ```
 
+Use GitHub!!
+
 ```bash
-$ cd apps/app  
-$ bun run build
-$ bunx wrangler pages deploy dist --project-name hono-book-log 
+# $ cd apps/app  
+# $ bun run build
+# $ bunx wrangler pages deploy dist --project-name hono-book-log 
 ```
