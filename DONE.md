@@ -1,6 +1,7 @@
 # やったことメモ
 
 ## API
+
 ### Installation
 
 ```bash
@@ -11,6 +12,7 @@ $ cd apps/api
 $ bun create hono@latest hono-book-log
 $ bun add zod @hono/zod-openapi @hono/swagger-ui 
 ```
+
 https://zenn.dev/praha/articles/d1d6462a27e37e
 https://qiita.com/kaiparu/items/88ae7c11fb45b82b447a
 
@@ -59,6 +61,7 @@ $ bunx drizzle-kit generate
 ```
 
 wrangler.jsoncが生成されなかったので手動で追加
+
 ```jsonc : wrangler.jsonc
 {
   "$schema": "node_modules/wrangler/config-schema.json",
@@ -113,7 +116,7 @@ app.get("/books", async (c) => {
     const db = drizzle(c.env.hono_todo_db);
     const result = await db.select().from(todos).all();
     if (result.length === 0) {
-        return c.json({ message: "no results" }, 404)
+        return c.json({message: "no results"}, 404)
     }
     return c.json(result);
 });
@@ -131,19 +134,22 @@ $ bunx wrangler dev
 https://orm.drizzle.team/docs/zod
 
 - [ ] TODO - Replace drizzle-zod with @drizzle-orm/zod
+
 ```
 Starting from drizzle-orm@1.0.0-beta.15, drizzle-zod has been deprecated in favor of first-class schema generation support within Drizzle ORM itself.
 You can still use drizzle-zod package but all new update will be added to Drizzle ORM directly.
 ```
+
 ```bash
 $ bun add -D @hono/zod-openapi @hono/swagger-ui drizzle-zod
 ```
+
 ```ts : packages/api/src/schema.ts
 import {sqliteTable, integer, text} from "drizzle-orm/sqlite-core";
 import {createInsertSchema, createSelectSchema} from "drizzle-zod";
 // Add imports
-import { z } from "@hono/zod-openapi";
-import { extendZodWithOpenApi } from "@hono/zod-openapi";
+import {z} from "@hono/zod-openapi";
+import {extendZodWithOpenApi} from "@hono/zod-openapi";
 
 export const books = sqliteTable("books", {
     id: integer("id", {mode: "number"}).primaryKey({autoIncrement: true}),
@@ -174,23 +180,23 @@ export const BookIdParamSchema = z.object({
         .string()
         .regex(/^\d+$/, "ID must be a number")
         .transform(Number)
-        .openapi({ example: "1" })
+        .openapi({example: "1"})
 });
 ```
 
 Add packages/api/src/index.routes.ts
 
 ```ts : packages/api/src/index.routes.ts
-import { createRoute } from "@hono/zod-openapi";
+import {createRoute} from "@hono/zod-openapi";
 import {BookIdParamSchema, insertBookSchema, selectBookSchema} from "./schema";
-import { z } from "@hono/zod-openapi";
+import {z} from "@hono/zod-openapi";
 
 export const getBooksRoute = createRoute({
     method: 'get',
     path: '/books',
     responses: {
-        200: { content: { 'application/json': { schema: z.array(selectBookSchema) } }, description: 'Retrieve book list' },
-        404: { content: { 'application/json': { schema: z.object({ message: z.string() }) } }, description: 'No books found' }
+        200: {content: {'application/json': {schema: z.array(selectBookSchema)}}, description: 'Retrieve book list'},
+        404: {content: {'application/json': {schema: z.object({message: z.string()})}}, description: 'No books found'}
     },
 });
 
@@ -198,10 +204,10 @@ export const postBookRoute = createRoute({
     method: 'post',
     path: '/books',
     request: {
-        body: { content: { 'application/json': { schema: insertBookSchema } } }
+        body: {content: {'application/json': {schema: insertBookSchema}}}
     },
     responses: {
-        200: { content: { 'application/json': { schema: z.any() } }, description: 'Book created' }
+        200: {content: {'application/json': {schema: z.any()}}, description: 'Book created'}
     },
 });
 
@@ -210,7 +216,7 @@ export const putBookRoute = createRoute({
     path: '/books/{id}',
     request: {
         params: BookIdParamSchema,
-        body: { content: { 'application/json': { schema: insertBookSchema } } }
+        body: {content: {'application/json': {schema: insertBookSchema}}}
     },
     responses: {
         200: {content: {'application/json': {schema: z.any()}}, description: 'Book updated'},
@@ -224,7 +230,7 @@ export const deleteBookRoute = createRoute({
         params: BookIdParamSchema
     },
     responses: {
-        200: { content: { 'application/json': { schema: z.any() } }, description: 'Book deleted' }
+        200: {content: {'application/json': {schema: z.any()}}, description: 'Book deleted'}
     },
 });
 ```
@@ -232,12 +238,12 @@ export const deleteBookRoute = createRoute({
 Update packages/api/src/index.ts
 
 ```ts : packages/api/src/index.ts
-import { OpenAPIHono } from "@hono/zod-openapi";
-import { swaggerUI } from "@hono/swagger-ui";
-import { drizzle } from "drizzle-orm/d1";
-import { books } from "./schema";
-import { eq } from "drizzle-orm";
-import {deleteBookRoute, getBooksRoute, postBookRoute, putBookRoute } from "./index.routes";
+import {OpenAPIHono} from "@hono/zod-openapi";
+import {swaggerUI} from "@hono/swagger-ui";
+import {drizzle} from "drizzle-orm/d1";
+import {books} from "./schema";
+import {eq} from "drizzle-orm";
+import {deleteBookRoute, getBooksRoute, postBookRoute, putBookRoute} from "./index.routes";
 
 type Bindings = {
     hono_books_db: D1Database;
@@ -251,7 +257,7 @@ app.openapi(getBooksRoute, async (c) => {
     const db = drizzle(c.env.hono_books_db);
     const result = await db.select().from(books).all();
     if (result.length === 0) {
-        return c.json({ message: "no results" }, 404);
+        return c.json({message: "no results"}, 404);
     }
     return c.json(result, 200);
 });
@@ -265,12 +271,12 @@ app.openapi(postBookRoute, async (c) => {
 });
 
 app.openapi(putBookRoute, async (c) => {
-    const { id } = c.req.valid("param");
+    const {id} = c.req.valid("param");
 
     const db = drizzle(c.env.hono_books_db);
     const result = await db
         .update(books)
-        .set({ ...c.req.valid("json"), updatedAt: new Date() })
+        .set({...c.req.valid("json"), updatedAt: new Date()})
         .where(eq(books.id, id))
         .run();
 
@@ -278,7 +284,7 @@ app.openapi(putBookRoute, async (c) => {
 });
 
 app.openapi(deleteBookRoute, async (c) => {
-    const { id } = c.req.valid("param");
+    const {id} = c.req.valid("param");
 
     const db = drizzle(c.env.hono_books_db);
     const result = await db.delete(books).where(eq(books.id, id)).execute();
@@ -288,16 +294,18 @@ app.openapi(deleteBookRoute, async (c) => {
 
 app.doc("/doc", {
     openapi: "3.0.0",
-    info: { title: "Books API", version: "1.0.0" },
+    info: {title: "Books API", version: "1.0.0"},
 });
 
-app.get("/ui", swaggerUI({ url: "/doc" }));
+app.get("/ui", swaggerUI({url: "/doc"}));
 
 export default app;
 ```
 
 # App
+
 ## Refactor
+
 ```text
 hono-book-log/
 ├── apps/
@@ -315,6 +323,7 @@ $ bun create vite apps/app --template react-ts
 ```
 
 ## 技術選定覚え書き
+
 - hono: Supabeseよりも拡張性が高くFastAPIと違いTSが使える. Nestほど学習コストが高くなくExpressよりモダンなので洗練されてそう
 - drizzle-orm: Cloudflareを使うが，他のDBでも使えるようにORMを挟む
 - zod: HonoでOpenAPI Documentationを生成させるときにうまくやってくれそうだから（本当に？）
@@ -322,3 +331,33 @@ $ bun create vite apps/app --template react-ts
 ```bash
 $ bun create vite apps/app --template react-ts
 ```
+
+# Deploy on Cloudflare
+
+```bash
+$ cd apps/api
+$ bunx wrangler deploy
+```
+
+## API URL の書き換え
+
+```ts : apps/app/src/lib/api.ts
+// apps/app/src/lib/api.ts
+import {hc} from 'hono/client';
+import type {AppType} from 'book-log-api';
+
+
+const API_URL = import.meta.env.PROD
+    ? 'https://hono-book-log.itsukikigoshi.workers.dev'
+    : 'http://localhost:8787';
+
+export const client = hc<AppType>(API_URL);
+```
+
+```bash
+$ cd apps/app  
+$ bun run build
+$ bunx wrangler pages deploy dist --project-name hono-book-log 
+```
+
+-> Just use GitHub Integrations from Cloudflare Dashboard

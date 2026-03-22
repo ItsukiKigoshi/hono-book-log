@@ -56,7 +56,13 @@ const routes = new OpenAPIHono<{ Bindings: Bindings }>()
     });
 
 const app = new OpenAPIHono<{ Bindings: Bindings }>()
-    .use('*', cors())
+    .use('*', cors({
+        origin: [
+            'http://localhost:5173',
+            'https://d30ea011.hono-book-log.pages.dev/'
+        ],
+        allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    }))
     .route('/', routes);
 
 app.get("/ui", swaggerUI({url: "/doc"}));
