@@ -359,5 +359,3 @@ $ cd apps/app
 $ bun run build
 $ bunx wrangler pages deploy dist --project-name hono-book-log 
 ```
-
--> Just use GitHub Integrations from Cloudflare Dashboard

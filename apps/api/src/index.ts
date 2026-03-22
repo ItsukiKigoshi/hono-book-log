@@ -59,7 +59,7 @@ const app = new OpenAPIHono<{ Bindings: Bindings }>()
     .use('*', cors({
         origin: [
             'http://localhost:5173',
-            'https://d30ea011.hono-book-log.pages.dev/'
+            'https://hono-book-log.pages.dev/'
         ],
         allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     }))
