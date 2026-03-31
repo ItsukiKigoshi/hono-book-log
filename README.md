@@ -1,4 +1,7 @@
 # HonoBookLog
+Example Bookshelf App to record reading status / wishlist without user managemnt.
+
+<img width="937" height="1157" alt="Capture d’écran du 2026-03-30 17-15-22" src="https://github.com/user-attachments/assets/741319ea-badb-47c2-9844-5c3276f9dd93" />
 
 ## 技術選定覚え書き
 
